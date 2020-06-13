@@ -1,0 +1,49 @@
+// ***************************************************************************
+//                                                                           *
+//  Copyright (c) 2020 Clifford Thompson                                     *
+//                                                                           *
+//  All code in this file is released under Creative Commons Attribution     *
+//  (CC-BY) license : https://creativecommons.org/licenses/by/4.0/.          *
+//                                                                           *
+// ***************************************************************************
+
+// ***************************************************************************
+// Global styles
+// ***************************************************************************
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+div {
+  //border: 1px solid red; // For debugging
+}
+
+.sim-canvas {
+  border: 1px solid black;
+  margin: 0 auto;
+  width: 100%;
+  height: auto;
+}
+
+.sim-column {
+  padding-bottom: 30px;
+  text-align: center;
+}
+
+.sim-finished-column {
+  text-align: center;
+}
+
+.sim-jumbotron {
+  background: #557092;
+  color: #eeeeee;
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+
+

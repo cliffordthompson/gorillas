@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!--
+# ***************************************************************************
+#                                                                           *
+#  Copyright (c) 2020 Clifford Thompson                                     *
+#                                                                           *
+#  All code in this file is released under Creative Commons Attribution     *
+#  (CC-BY) license : https://creativecommons.org/licenses/by/4.0/.          *
+#                                                                           *
+# ***************************************************************************
+  -->
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Gorillas Simulator</title>
+  </head>
+  <body onload="startSimulationLoop()">
+    <div class="container">
+      <div class="jumbotron sim-jumbotron">
+        <h1 class="display-6">Gorilla Simulator</h1>
+        <p class="lead">This is a simple simulation of some angry gorillas.</p>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg sim-column">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Simulation</h5>
+              <canvas class="sim-canvas" id="simulation-canvas" width="500px" height="300px"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="js/jquery-3.5.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/gorilla.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>
