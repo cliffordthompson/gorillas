@@ -26,11 +26,33 @@
     </div>
     <div class="container">
       <div class="row">
-        <div class="col-lg sim-column">
+        <div class="col-8 sim-column">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Simulation</h5>
+              <h5 class="card-title">Gorilla Simulation</h5>
               <canvas class="sim-canvas" id="simulation-canvas" width="500px" height="300px"></canvas>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary" onclick="resetSimulation()">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col sim-column">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Controls</h5>
+              <div class="container">
+                <div class="row">
+                  <div class="col">
+                    <label>Gorillas</label>
+                  </div>
+                  <div class="col">
+                    <input id="number_gorillas_range" type="range" class="custom-range" min="1" max="10" value="1" oninput="number_gorillas.value=value"></input>
+                  </div>
+                  <div class="col">
+                    <output id="number_gorillas">1</output>
+                  </div>
+                </div>
             </div>
           </div>
         </div>

@@ -7,9 +7,10 @@
 //                                                                           *
 // ***************************************************************************
 
-const FRAMES_PER_SECOND = 30;
+const FRAMES_PER_SECOND = 10;
 let canvas, context;
 let intervalId = null;
+let gorillas = [];
 
 // ***************************************************************************
 // Description:
@@ -82,6 +83,13 @@ function resumeSimulation() {
 //
 function resetSimulation() {
 
+  let numberOfGorillas = document.getElementById("number_gorillas").value;
+  gorillas = [];
+
+  for(var i = 0; i < numberOfGorillas; ++i) {
+    gorillas.push(_createGorilla());
+  }
+
   // set up simulation loop
   _clearIntervalLoop(intervalId);
   intervalId = _createIntervalLoop();
@@ -103,6 +111,10 @@ function resetSimulation() {
 function _updateSimulation() {
 
   _drawBackground();
+
+  for(var i = 0; i < gorillas.length; ++i) {
+    _drawGorilla(gorillas[i]);
+  };
 
 }
 
@@ -172,6 +184,129 @@ function _createIntervalLoop() {
 //
 function _drawBackground() {
   // draw background
-  context.fillStyle = "#aabbaa";
+  context.fillStyle = "#0000aa";
   context.fillRect(0, 0, canvas.width, canvas.height);
 }
+
+// ***************************************************************************
+// Description:
+//   This function draws a single gorilla on the simulation canvas.
+//
+// Inputs:
+//   gorilla - The instance of the gorilla to draw
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+function _drawGorilla(gorilla) {
+
+  context.strokeStyle = gorilla.bodyColour;
+  context.fillStyle = gorilla.bodyColour;
+  context.beginPath();
+
+  // Draw Head
+  context.fillRect(gorilla.positionX - 4, gorilla.positionY,
+                   7, 7);
+  context.fillRect(gorilla.positionX - 5, gorilla.positionY + 2,
+                   9, 3);
+
+  // Draw Neck
+  context.fillRect(gorilla.positionX - 3, gorilla.positionY + 7, 5, 1);
+
+  // Draw Body
+  context.fillRect(gorilla.positionX - 9, gorilla.positionY + 8, 17, 7);
+  context.fillRect(gorilla.positionX - 7, gorilla.positionY + 15, 13, 6);
+
+  let leftAngle1 = 215 * Math.PI / 180;
+  let leftAngle2 = 147 * Math.PI / 180;
+
+  // Draw Left Leg
+  context.beginPath();
+  context.arc( gorilla.positionX + 0, gorilla.positionY + 27, 10, leftAngle1, leftAngle2, true );
+  context.arc( gorilla.positionX + 1, gorilla.positionY + 27, 10, leftAngle2, leftAngle1, false );
+  context.arc( gorilla.positionX + 2, gorilla.positionY + 27, 10, leftAngle1, leftAngle2, true );
+  context.arc( gorilla.positionX + 3, gorilla.positionY + 27, 10, leftAngle2, leftAngle1, false );
+  context.arc( gorilla.positionX + 4, gorilla.positionY + 27, 10, leftAngle1, leftAngle2, true );
+  context.arc( gorilla.positionX + 5, gorilla.positionY + 27, 10, leftAngle2, leftAngle1, false );
+  context.stroke();
+
+  // Draw Left Arm
+  context.beginPath();
+  context.arc( gorilla.positionX - 4, gorilla.positionY + 15, 10, leftAngle1, leftAngle2, true );
+  context.arc( gorilla.positionX - 3, gorilla.positionY + 15, 10, leftAngle2, leftAngle1, false );
+  context.arc( gorilla.positionX - 2, gorilla.positionY + 15, 10, leftAngle1, leftAngle2, true );
+  context.arc( gorilla.positionX - 1, gorilla.positionY + 15, 10, leftAngle2, leftAngle1, false );
+  context.arc( gorilla.positionX - 0, gorilla.positionY + 15, 10, leftAngle1, leftAngle2, true );
+  context.stroke();
+
+
+  let rightAngle1 = 33 * Math.PI / 180;
+  let rightAngle2 = 325 * Math.PI / 180;
+
+  // Draw Right Leg
+  context.beginPath();
+  context.arc( gorilla.positionX - 6, gorilla.positionY + 27, 10, rightAngle1, rightAngle2, true );
+  context.arc( gorilla.positionX - 5, gorilla.positionY + 27, 10, rightAngle2, rightAngle1, false );
+  context.arc( gorilla.positionX - 4, gorilla.positionY + 27, 10, rightAngle1, rightAngle2, true );
+  context.arc( gorilla.positionX - 3, gorilla.positionY + 27, 10, rightAngle2, rightAngle1, false );
+  context.arc( gorilla.positionX - 2, gorilla.positionY + 27, 10, rightAngle1, rightAngle2, true );
+  context.arc( gorilla.positionX - 1, gorilla.positionY + 27, 10, rightAngle2, rightAngle1, false );
+  context.stroke();
+
+  // Draw Right Arm
+  context.beginPath();
+  context.arc( gorilla.positionX - 1, gorilla.positionY + 15, 10, rightAngle1, rightAngle2, true );
+  context.arc( gorilla.positionX - 0, gorilla.positionY + 15, 10, rightAngle2, rightAngle1, false );
+  context.arc( gorilla.positionX + 1, gorilla.positionY + 15, 10, rightAngle1, rightAngle2, true );
+  context.arc( gorilla.positionX + 2, gorilla.positionY + 15, 10, rightAngle2, rightAngle1, false );
+  context.arc( gorilla.positionX + 3, gorilla.positionY + 15, 10, rightAngle1, rightAngle2, true );
+  context.stroke();
+
+  // Draw Chest
+  context.strokeStyle = gorilla.bodyLineColour;
+  context.beginPath();
+  context.arc( gorilla.positionX - 5, gorilla.positionY + 10, 4.9, 0, 3 * Math.PI / 5, false );
+  context.stroke();
+  context.beginPath();
+  context.arc( gorilla.positionX + 4, gorilla.positionY + 10, 4.9, 3 * Math.PI / 7, 4 * Math.PI / 4, false );
+  context.stroke();
+
+  // Draw Eyes/Brow
+  context.fillStyle = gorilla.bodyLineColour;
+  context.fillRect(gorilla.positionX - 3, gorilla.positionY + 4, 2, 1);
+  context.fillRect(gorilla.positionX, gorilla.positionY + 4, 2, 1);
+  context.fillRect(gorilla.positionX - 3, gorilla.positionY + 2, 5, 1);
+  context.stroke();
+
+  //context.strokeStyle = 'red';
+  //context.strokeRect(gorilla.positionX, gorilla.positionY, 1, 1);
+}
+
+// ***************************************************************************
+// Description:
+//   This function creates an instance of a gorilla.
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   An instance of a gorilla
+// ***************************************************************************
+//
+function _createGorilla() {
+
+  let positionX, positionY;
+  let leftArmUp = false;
+  let rightArmUp = false;
+
+  positionX = Math.random() * canvas.width;
+  positionY = Math.random() * canvas.height;
+
+  return new Gorilla(
+    positionX, positionY,
+    leftArmUp, rightArmUp);
+}
+

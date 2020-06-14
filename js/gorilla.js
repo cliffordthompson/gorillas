@@ -8,8 +8,12 @@
 // ***************************************************************************
 
 function Gorilla (
-  positionX, positionY) {
+  positionX, positionY, leftArmUp, rightArmUp) {
 
   this.positionX = positionX;
   this.positionY = positionY;
+  this.leftArmUp = leftArmUp;
+  this.rightArmUp = rightArmUp;
+  this.bodyColour = "#ffaa52";
+  this.bodyLineColour = "#0000aa"
 }
