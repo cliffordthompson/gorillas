@@ -9,26 +9,25 @@
 
 // ***************************************************************************
 // Description:
-//   This is the data model object for a gorilla.
+//   This is the data model object for a banana.
 //
 // Inputs:
-//   positionX - The x position of the gorilla
-//   positionY - The y position of the gorilla
-//   leftArmUp - Boolean that indicates the position of the left arm
-//   rightArmUp - Boolean that indicates the position of the right arm
+//   positionX - The x position of the banana
+//   positionY - The y position of the banana
+//   rotationAngleDg - The rotation of the banana in degrees. 0 degrees is at
+//                     3'oclock and goe clockwise.
 // Outputs:
 //   None
 // Returns:
 //   None
 // ***************************************************************************
 //
-function Gorilla (
-  positionX, positionY, leftArmUp, rightArmUp) {
+function Banana (
+  positionX, positionY, rotationAngleDg ) {
 
   this.positionX = positionX;
   this.positionY = positionY;
-  this.leftArmUp = leftArmUp;
-  this.rightArmUp = rightArmUp;
-  this.bodyColour = "#ffaa52";
-  this.bodyLineColour = "#0000aa"
+  this.rotationAngleDg = rotationAngleDg
+  this.fillColour = "#ffff00";
+  this.lineColour = "#ffff00"
 }

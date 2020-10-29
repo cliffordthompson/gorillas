@@ -11,6 +11,7 @@ const FRAMES_PER_SECOND = 10;
 let canvas, context;
 let intervalId = null;
 let gorillas = [];
+let bananas = [];
 
 // ***************************************************************************
 // Description:
@@ -84,10 +85,16 @@ function resumeSimulation() {
 function resetSimulation() {
 
   let numberOfGorillas = document.getElementById("number_gorillas").value;
+  let numberOfBananas  = document.getElementById("number_bananas").value;
   gorillas = [];
+  bananas = [];
 
   for(var i = 0; i < numberOfGorillas; ++i) {
     gorillas.push(_createGorilla());
+  }
+
+  for(var i = 0; i < numberOfBananas; ++i) {
+    bananas.push(_createBanana());
   }
 
   // set up simulation loop
@@ -110,12 +117,64 @@ function resetSimulation() {
 //
 function _updateSimulation() {
 
-  _drawBackground();
+  _processUserInput();
+  _updateElementPositions();
+  _renderElements();
 
-  for(var i = 0; i < gorillas.length; ++i) {
-    _drawGorilla(gorillas[i]);
-  };
+}
 
+// ***************************************************************************
+// Description:
+//   This function processes the user input for a single event loop
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+function _processUserInput() {
+  // Nothing to process right now
+}
+
+// ***************************************************************************
+// Description:
+//   This function updates the location of all elements for a single event
+//   loop.
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+function _updateElementPositions() {
+  // Nothing to update right now
+}
+
+
+// ***************************************************************************
+// Description:
+//   This function renders all the elements for a single event loop.
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+function _renderElements() {
+
+  _renderBackground();
+
+  gorillas.forEach(_renderGorilla);
+  bananas.forEach(_renderBanana);
 }
 
 // ***************************************************************************
@@ -155,7 +214,7 @@ function _clearIntervalLoop(intervalId) {
 
 // ***************************************************************************
 // Description:
-//   This function registers a new interval callback.
+//   This function registers a new interval callback for the event loop.
 //
 // Inputs:
 //   None
@@ -172,7 +231,7 @@ function _createIntervalLoop() {
 
 // ***************************************************************************
 // Description:
-//   This function draws the background for the simulation canvas.
+//   This function renders the background for the simulation canvas.
 //
 // Inputs:
 //   None
@@ -182,7 +241,7 @@ function _createIntervalLoop() {
 //   None
 // ***************************************************************************
 //
-function _drawBackground() {
+function _renderBackground() {
   // draw background
   context.fillStyle = "#0000aa";
   context.fillRect(0, 0, canvas.width, canvas.height);
@@ -190,7 +249,7 @@ function _drawBackground() {
 
 // ***************************************************************************
 // Description:
-//   This function draws a single gorilla on the simulation canvas.
+//   This function renders a single gorilla on the simulation canvas.
 //
 // Inputs:
 //   gorilla - The instance of the gorilla to draw
@@ -200,7 +259,7 @@ function _drawBackground() {
 //   None
 // ***************************************************************************
 //
-function _drawGorilla(gorilla) {
+function _renderGorilla(gorilla) {
 
   context.strokeStyle = gorilla.bodyColour;
   context.fillStyle = gorilla.bodyColour;
@@ -279,9 +338,40 @@ function _drawGorilla(gorilla) {
   context.fillRect(gorilla.positionX, gorilla.positionY + 4, 2, 1);
   context.fillRect(gorilla.positionX - 3, gorilla.positionY + 2, 5, 1);
   context.stroke();
+}
 
-  //context.strokeStyle = 'red';
-  //context.strokeRect(gorilla.positionX, gorilla.positionY, 1, 1);
+// ***************************************************************************
+// Description:
+//   This function renders a single banana on the simulation canvas.
+//
+// Inputs:
+//   banana - The instance of the banana to draw
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+function _renderBanana(banana) {
+
+  const bananaOuterRadiusPx = 5;
+  const bananaInnerRadiusPx = 3;
+
+  context.strokeStyle = banana.lineColour;
+  context.fillStyle = banana.fillColour;
+  context.beginPath();
+
+  context.arc(banana.positionX, banana.positionY,
+              bananaOuterRadiusPx,
+              0 + banana.rotationAngleDg, Math.PI + banana.rotationAngleDg,
+              false);
+  context.arc(banana.positionX, banana.positionY,
+              bananaInnerRadiusPx,
+              Math.PI + banana.rotationAngleDg, 0 + banana.rotationAngleDg,
+              true );
+  context.closePath();
+  context.fill();
+  context.stroke();
 }
 
 // ***************************************************************************
@@ -293,7 +383,7 @@ function _drawGorilla(gorilla) {
 // Outputs:
 //   None
 // Returns:
-//   An instance of a gorilla
+//   An instance of a Gorilla
 // ***************************************************************************
 //
 function _createGorilla() {
@@ -310,3 +400,27 @@ function _createGorilla() {
     leftArmUp, rightArmUp);
 }
 
+
+// ***************************************************************************
+// Description:
+//   This function creates an instance of a banana.
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   An instance of a Banana
+// ***************************************************************************
+//
+function _createBanana() {
+
+  let positionX, positionY;
+  let rotationAngleDg;
+
+  positionX = Math.random() * canvas.width;  // [0, canvas.width)
+  positionY = Math.random() * canvas.height; // [0, canvas.height)
+  rotationAngleDg = Math.random() * (360);   // [0,360)
+
+  return new Banana(positionX, positionY, rotationAngleDg);
+}
