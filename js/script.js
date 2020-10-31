@@ -266,16 +266,16 @@ function _renderGorilla(gorilla) {
   context.beginPath();
 
   // Draw Head
-  context.fillRect(gorilla.positionX - 4, gorilla.positionY,
+  context.fillRect(gorilla.positionX - 4, gorilla.positionY + 1,
                    7, 7);
-  context.fillRect(gorilla.positionX - 5, gorilla.positionY + 2,
+  context.fillRect(gorilla.positionX - 5, gorilla.positionY + 3,
                    9, 3);
 
   // Draw Neck
-  context.fillRect(gorilla.positionX - 3, gorilla.positionY + 7, 5, 1);
+  context.fillRect(gorilla.positionX - 3, gorilla.positionY + 8, 5, 1);
 
   // Draw Body
-  context.fillRect(gorilla.positionX - 9, gorilla.positionY + 8, 17, 7);
+  context.fillRect(gorilla.positionX - 9, gorilla.positionY + 9, 17, 8);
   context.fillRect(gorilla.positionX - 7, gorilla.positionY + 15, 13, 6);
 
   let leftAngle1 = 215 * Math.PI / 180;
@@ -283,21 +283,18 @@ function _renderGorilla(gorilla) {
 
   // Draw Left Leg
   context.beginPath();
-  context.arc( gorilla.positionX + 0, gorilla.positionY + 27, 10, leftAngle1, leftAngle2, true );
-  context.arc( gorilla.positionX + 1, gorilla.positionY + 27, 10, leftAngle2, leftAngle1, false );
-  context.arc( gorilla.positionX + 2, gorilla.positionY + 27, 10, leftAngle1, leftAngle2, true );
-  context.arc( gorilla.positionX + 3, gorilla.positionY + 27, 10, leftAngle2, leftAngle1, false );
-  context.arc( gorilla.positionX + 4, gorilla.positionY + 27, 10, leftAngle1, leftAngle2, true );
-  context.arc( gorilla.positionX + 5, gorilla.positionY + 27, 10, leftAngle2, leftAngle1, false );
+  context.arc( gorilla.positionX + 0, gorilla.positionY + 27, 10, leftAngle2, leftAngle1, false );
+  context.arc( gorilla.positionX + 5, gorilla.positionY + 27, 10, leftAngle1, leftAngle2, true );
+  context.closePath();
+  context.fill();
   context.stroke();
 
   // Draw Left Arm
   context.beginPath();
-  context.arc( gorilla.positionX - 4, gorilla.positionY + 15, 10, leftAngle1, leftAngle2, true );
-  context.arc( gorilla.positionX - 3, gorilla.positionY + 15, 10, leftAngle2, leftAngle1, false );
-  context.arc( gorilla.positionX - 2, gorilla.positionY + 15, 10, leftAngle1, leftAngle2, true );
-  context.arc( gorilla.positionX - 1, gorilla.positionY + 15, 10, leftAngle2, leftAngle1, false );
+  context.arc( gorilla.positionX - 4, gorilla.positionY + 15, 10, leftAngle2, leftAngle1, false );
   context.arc( gorilla.positionX - 0, gorilla.positionY + 15, 10, leftAngle1, leftAngle2, true );
+  context.closePath();
+  context.fill();
   context.stroke();
 
 
@@ -306,30 +303,27 @@ function _renderGorilla(gorilla) {
 
   // Draw Right Leg
   context.beginPath();
-  context.arc( gorilla.positionX - 6, gorilla.positionY + 27, 10, rightAngle1, rightAngle2, true );
-  context.arc( gorilla.positionX - 5, gorilla.positionY + 27, 10, rightAngle2, rightAngle1, false );
-  context.arc( gorilla.positionX - 4, gorilla.positionY + 27, 10, rightAngle1, rightAngle2, true );
-  context.arc( gorilla.positionX - 3, gorilla.positionY + 27, 10, rightAngle2, rightAngle1, false );
-  context.arc( gorilla.positionX - 2, gorilla.positionY + 27, 10, rightAngle1, rightAngle2, true );
-  context.arc( gorilla.positionX - 1, gorilla.positionY + 27, 10, rightAngle2, rightAngle1, false );
+  context.arc( gorilla.positionX - 1, gorilla.positionY + 27, 10, rightAngle1, rightAngle2, true );
+  context.arc( gorilla.positionX - 6, gorilla.positionY + 27, 10, rightAngle2, rightAngle1, false );
+  context.closePath();
+  context.fill();
   context.stroke();
 
   // Draw Right Arm
   context.beginPath();
-  context.arc( gorilla.positionX - 1, gorilla.positionY + 15, 10, rightAngle1, rightAngle2, true );
-  context.arc( gorilla.positionX - 0, gorilla.positionY + 15, 10, rightAngle2, rightAngle1, false );
-  context.arc( gorilla.positionX + 1, gorilla.positionY + 15, 10, rightAngle1, rightAngle2, true );
-  context.arc( gorilla.positionX + 2, gorilla.positionY + 15, 10, rightAngle2, rightAngle1, false );
   context.arc( gorilla.positionX + 3, gorilla.positionY + 15, 10, rightAngle1, rightAngle2, true );
+  context.arc( gorilla.positionX - 1, gorilla.positionY + 15, 10, rightAngle2, rightAngle1,  false );
+  context.closePath();
+  context.fill();
   context.stroke();
 
   // Draw Chest
   context.strokeStyle = gorilla.bodyLineColour;
   context.beginPath();
-  context.arc( gorilla.positionX - 5, gorilla.positionY + 10, 4.9, 0, 3 * Math.PI / 5, false );
+  context.arc( gorilla.positionX - 5, gorilla.positionY + 11, 4.9, 0, 3 * Math.PI / 5, false );
   context.stroke();
   context.beginPath();
-  context.arc( gorilla.positionX + 4, gorilla.positionY + 10, 4.9, 3 * Math.PI / 7, 4 * Math.PI / 4, false );
+  context.arc( gorilla.positionX + 4, gorilla.positionY + 11, 4.9, 3 * Math.PI / 7, 4 * Math.PI / 4, false );
   context.stroke();
 
   // Draw Eyes/Brow
