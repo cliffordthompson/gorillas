@@ -243,7 +243,7 @@ function _createIntervalLoop() {
 //
 function _renderBackground() {
   // draw background
-  context.fillStyle = "#0000aa";
+  context.fillStyle = "#000da3";
   context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
