@@ -12,6 +12,7 @@ let canvas, context;
 let intervalId = null;
 let gorillas = [];
 let bananas = [];
+let buildings = [];
 
 // ***************************************************************************
 // Description:
@@ -88,6 +89,8 @@ function resetSimulation() {
   let numberOfBananas  = document.getElementById("number_bananas").value;
   gorillas = [];
   bananas = [];
+
+  _createCityScape();
 
   for(var i = 0; i < numberOfGorillas; ++i) {
     gorillas.push(_createGorilla());
@@ -173,6 +176,7 @@ function _renderElements() {
 
   _renderBackground();
 
+  buildings.forEach(_renderBuilding);
   gorillas.forEach(_renderGorilla);
   bananas.forEach(_renderBanana);
 }
@@ -245,6 +249,25 @@ function _renderBackground() {
   // draw background
   context.fillStyle = "#000da3";
   context.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+// ***************************************************************************
+// Description:
+//   This function renders a single building on the simulation canvas.
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+function _renderBuilding(building) {
+  context.fillStyle = building.fillColour;
+
+  // Draw main Building Structure
+  context.fillRect(building.positionX, building.positionY - building.heightPx, building.widthPx, building.heightPx );
 }
 
 // ***************************************************************************
@@ -366,6 +389,24 @@ function _renderBanana(banana) {
   context.closePath();
   context.fill();
   context.stroke();
+}
+
+// ***************************************************************************
+// Description:
+//   This function creates an instance of a cityscape
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   An instance of a Gorilla
+// ***************************************************************************
+//
+function _createCityScape() {
+  buildings.push(new Building( 0, canvas.height, 100, 200, "#4fa7a9"));
+  buildings.push(new Building( 101, canvas.height, 100, 250, "#aaaaaa"));
+  buildings.push(new Building( 202, canvas.height, 100, 300, "#9a1e14"));
 }
 
 // ***************************************************************************
