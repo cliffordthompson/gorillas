@@ -264,10 +264,26 @@ function _renderBackground() {
 // ***************************************************************************
 //
 function _renderBuilding(building) {
+
+  let windowWidthPx = 3;
+  let windowHeightPx = 6;
+
   context.fillStyle = building.fillColour;
 
   // Draw main Building Structure
   context.fillRect(building.positionX, building.positionY - building.heightPx, building.widthPx, building.heightPx );
+
+  // Draw windows
+  context.fillStyle = "#fffe73"
+
+  for (var i = 0; i < 15; ++i) {
+    context.fillRect(building.positionX + 2 + i*6, building.positionY - building.heightPx + 2, windowWidthPx, windowHeightPx);
+  }
+
+  context.fillStyle = "#555555";
+  for (var i = 0; i < 15; ++i) {
+    context.fillRect(building.positionX + 2 + i*6, building.positionY - building.heightPx + 2 + 10, windowWidthPx, windowHeightPx);
+  }
 }
 
 // ***************************************************************************
