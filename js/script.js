@@ -266,25 +266,30 @@ function _renderBackground() {
 //
 function _renderBuilding(building) {
 
-  let windowWidthPx = 3;
-  let windowHeightPx = 6;
-
   context.fillStyle = building.fillColour;
 
   // Draw main Building Structure
   context.fillRect(building.positionX, building.positionY, building.widthPx, building.heightPx );
 
   // Draw windows
-  context.fillStyle = "#fffe73"
+  building.windows.forEach(_renderWindow);
+}
 
-  for (var i = 0; i < 2; ++i) {
-    context.fillRect(building.positionX + 2 + i*6, building.positionY + 2, windowWidthPx, windowHeightPx);
-  }
-
-  context.fillStyle = "#555555";
-  for (var i = 0; i < 2; ++i) {
-    context.fillRect(building.positionX + 2 + i*6, building.positionY + 2 + 10, windowWidthPx, windowHeightPx);
-  }
+// ***************************************************************************
+// Description:
+//   This function renders a single window on the simulation canvas.
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+function _renderWindow(window) {
+  context.fillStyle = window.fillColour;
+  context.fillRect(window.positionX, window.positionY, window.widthPx, window.heightPx);
 }
 
 // ***************************************************************************
@@ -435,7 +440,7 @@ function _createCityScape() {
 
   let newHeight = slopes[slope];
 
-  for(var x = 2; x < canvas.width;) {
+  for(var topLeftX = 2; topLeftX < canvas.width;) {
     switch(slope) {
     case 0:
       newHeight += heightIncreasePx;
@@ -446,7 +451,7 @@ function _createCityScape() {
     case 2:
     case 3:
     case 4:
-      if (x > canvas.width / 2) {
+      if (topLeftX > canvas.width / 2) {
         newHeight -= 2*heightIncreasePx;
       }
       else {
@@ -454,7 +459,7 @@ function _createCityScape() {
       }
       break;
     case 5:
-      if (x > canvas.width / 2) {
+      if (topLeftX > canvas.width / 2) {
         newHeight += 2*heightIncreasePx;
       }
       else {
@@ -465,8 +470,8 @@ function _createCityScape() {
 
     // Set width of building and check to see if it would go off the screen
     let buildingWidthPx = Math.floor(Math.random() * defaultBuildingWidthPx) + defaultBuildingWidthPx;
-    if(x + buildingWidthPx > canvas.width) {
-      buildingWidthPx = canvas.width - x - 2
+    if(topLeftX + buildingWidthPx > canvas.width) {
+      buildingWidthPx = canvas.width - topLeftX - 2
     }
 
     // et height of building and check to see if it goes below screen
@@ -480,11 +485,60 @@ function _createCityScape() {
       buildingHeightPx = maxHeightPx + gorillaHeightAllowancePx - 5;
     }
 
-    let colour = Math.floor(Math.random()*3);
+    const topLeftY = canvas.height - buildingHeightPx;
+    const windows = _createWindows(topLeftX, topLeftY, buildingWidthPx, buildingHeightPx);
 
-    buildings.push(new Building( x, canvas.height - buildingHeightPx, buildingWidthPx, buildingHeightPx, buildingColours[colour]));
-    x += buildingWidthPx + buildingSpacingPx;
+    const colour = Math.floor(Math.random()*3);
+    buildings.push(
+        new Building(
+            topLeftX, topLeftY,
+            buildingWidthPx, buildingHeightPx,
+            buildingColours[colour],
+            windows));
+    topLeftX += buildingWidthPx + buildingSpacingPx;
   }
+}
+
+// ***************************************************************************
+// Description:
+//   This function creates windows for a building using the top left corner
+//   of the building as reference.
+//
+// Inputs:
+//   buildingTopLeftX - The top left corner of the building
+//   buildingTopLeftY - The top left corner of the building
+//   buildingWidthPx - The building width in pixels
+//   buildingHeightPx - The building height in pixels
+// Outputs:
+//   None
+// Returns:
+//   An instance of a Gorilla
+// ***************************************************************************
+//
+function _createWindows(buildingTopLeftX, buildingTopLeftY, buildingWidthPx, buildingHeightPx) {
+
+  const windowColours = ["#fffe73", "#555555"];
+  const windowWidthPx = 3;
+  const windowHeightPx = 6;
+  const windowHorizontalSpacingPx = 6;
+  const windowVerticalSpacingPx = 10;
+  let windows = [];
+
+  for(let windowTopLeftX = buildingTopLeftX + 3;
+      windowTopLeftX < buildingTopLeftX + buildingWidthPx - 3;
+      windowTopLeftX += windowHorizontalSpacingPx) {
+    for(let windowTopLeftY = buildingTopLeftY + 2;
+        windowTopLeftY < buildingTopLeftY + buildingHeightPx - windowHeightPx;
+        windowTopLeftY += windowVerticalSpacingPx) {
+      let colour = Math.floor(Math.random()*2);
+      windows.push(
+          new Window(
+              windowTopLeftX, windowTopLeftY,
+              windowWidthPx, windowHeightPx,
+              windowColours[colour]));
+    }
+  }
+  return windows;
 }
 
 // ***************************************************************************
