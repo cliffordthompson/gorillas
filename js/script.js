@@ -87,6 +87,7 @@ function resetSimulation() {
 
   let numberOfGorillas = document.getElementById("number_gorillas").value;
   let numberOfBananas  = document.getElementById("number_bananas").value;
+  buildings = [];
   gorillas = [];
   bananas = [];
 
@@ -271,18 +272,18 @@ function _renderBuilding(building) {
   context.fillStyle = building.fillColour;
 
   // Draw main Building Structure
-  context.fillRect(building.positionX, building.positionY - building.heightPx, building.widthPx, building.heightPx );
+  context.fillRect(building.positionX, building.positionY, building.widthPx, building.heightPx );
 
   // Draw windows
   context.fillStyle = "#fffe73"
 
-  for (var i = 0; i < 15; ++i) {
-    context.fillRect(building.positionX + 2 + i*6, building.positionY - building.heightPx + 2, windowWidthPx, windowHeightPx);
+  for (var i = 0; i < 2; ++i) {
+    context.fillRect(building.positionX + 2 + i*6, building.positionY + 2, windowWidthPx, windowHeightPx);
   }
 
   context.fillStyle = "#555555";
-  for (var i = 0; i < 15; ++i) {
-    context.fillRect(building.positionX + 2 + i*6, building.positionY - building.heightPx + 2 + 10, windowWidthPx, windowHeightPx);
+  for (var i = 0; i < 2; ++i) {
+    context.fillRect(building.positionX + 2 + i*6, building.positionY + 2 + 10, windowWidthPx, windowHeightPx);
   }
 }
 
@@ -420,9 +421,70 @@ function _renderBanana(banana) {
 // ***************************************************************************
 //
 function _createCityScape() {
-  buildings.push(new Building( 0, canvas.height, 100, 200, "#4fa7a9"));
-  buildings.push(new Building( 101, canvas.height, 100, 250, "#aaaaaa"));
-  buildings.push(new Building( 202, canvas.height, 100, 300, "#9a1e14"));
+
+  const buildingColours = ["#4fa7a9", "#aaaaaa", "#9a1e14"];
+  const slopes = [15,130,15,15,15,130];
+  const slope = Math.floor(Math.random() * 6);
+  const bottomLine = 335;
+  const heightIncreasePx = 10;
+  const defaultBuildingWidthPx = 37;
+  const randomHeightPx = 120;
+  const gorillaHeightAllowancePx = 25;
+  const maxHeightPx = canvas.height - 100;
+  const buildingSpacingPx = 2;
+
+  let newHeight = slopes[slope];
+
+  for(var x = 2; x < canvas.width;) {
+    switch(slope) {
+    case 0:
+      newHeight += heightIncreasePx;
+      break;
+    case 1:
+      newHeight -= heightIncreasePx;
+      break;
+    case 2:
+    case 3:
+    case 4:
+      if (x > canvas.width / 2) {
+        newHeight -= 2*heightIncreasePx;
+      }
+      else {
+        newHeight += 2*heightIncreasePx;
+      }
+      break;
+    case 5:
+      if (x > canvas.width / 2) {
+        newHeight += 2*heightIncreasePx;
+      }
+      else {
+        newHeight -= 2*heightIncreasePx;
+      }
+      break;
+    }
+
+    // Set width of building and check to see if it would go off the screen
+    let buildingWidthPx = Math.floor(Math.random() * defaultBuildingWidthPx) + defaultBuildingWidthPx;
+    if(x + buildingWidthPx > canvas.width) {
+      buildingWidthPx = canvas.width - x - 2
+    }
+
+    // et height of building and check to see if it goes below screen
+    let buildingHeightPx = Math.floor(Math.random() * randomHeightPx) + newHeight;
+    if(buildingHeightPx < heightIncreasePx){
+      buildingHeightPx = heightIncreasePx;
+    }
+
+    // Check to see if Building is too high
+    if(bottomLine - buildingHeightPx > maxHeightPx + gorillaHeightAllowancePx){
+      buildingHeightPx = maxHeightPx + gorillaHeightAllowancePx - 5;
+    }
+
+    let colour = Math.floor(Math.random()*3);
+
+    buildings.push(new Building( x, canvas.height - buildingHeightPx, buildingWidthPx, buildingHeightPx, buildingColours[colour]));
+    x += buildingWidthPx + buildingSpacingPx;
+  }
 }
 
 // ***************************************************************************
