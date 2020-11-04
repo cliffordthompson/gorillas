@@ -15,7 +15,8 @@ let gorillas = [];
 let bananas = [];
 let buildings = [];
 let sun = null;
-let windSpeed = null;
+let windSpeedMetersPerSecond = null;
+let gravityMetresPerSecond = null;
 
 // ***************************************************************************
 // Description:
@@ -97,7 +98,8 @@ function resetSimulation() {
 
   sun = _createSun();
   buildings = _createBuildings();
-  windSpeed = Math.random() * 10 - 5; // [-5,5]
+  windSpeedMetersPerSecond = Math.random() * 60 - 30; // [-30,30]
+  gravityMetresPerSecond = document.getElementById("gravity").value;
 
   for(var i = 0; i < numberOfGorillas; ++i) {
     gorillas.push(_createGorilla());
@@ -369,10 +371,10 @@ function _renderBuilding(building) {
 // ***************************************************************************
 //
 function _renderWindSpeed() {
-  if(windSpeed !== 0) {
+  if(windSpeedMetersPerSecond !== 0) {
     const windColour = "#c62b62";
-    const arrowDirection = windSpeed > 0 ? -2 : 2;
-    const windLineLengthPx = windSpeed * 3 * canvas.width / 320;
+    const arrowDirection = windSpeedMetersPerSecond > 0 ? -2 : 2;
+    const windLineLengthPx = windSpeedMetersPerSecond * 3 * canvas.width / 320;
     const windLinePositionX = (canvas.width / 2) - (windLineLengthPx / 2);
     const windLinePositionY = canvas.height - 5;
     const arrowHeadPositionX = windLinePositionX + windLineLengthPx;
