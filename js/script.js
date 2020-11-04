@@ -9,12 +9,14 @@
 
 const FRAMES_PER_SECOND = 10;
 const BACKGROUND_COLOUR = "#000da3";
+const WIND_COLOUR = "#c62b62";
 let canvas, context;
 let intervalId = null;
 let gorillas = [];
 let bananas = [];
 let buildings = [];
 let sun = null;
+let windSpeed = null;
 
 // ***************************************************************************
 // Description:
@@ -96,6 +98,7 @@ function resetSimulation() {
 
   sun = _createSun();
   buildings = _createBuildings();
+  windSpeed = Math.random() * 10 - 5; // [-5,5]
 
   for(var i = 0; i < numberOfGorillas; ++i) {
     gorillas.push(_createGorilla());
@@ -183,6 +186,8 @@ function _renderElements() {
   _renderSun(sun);
 
   buildings.forEach(_renderBuilding);
+  _renderWindSpeed();
+
   gorillas.forEach(_renderGorilla);
   bananas.forEach(_renderBanana);
 }
@@ -349,6 +354,42 @@ function _renderBuilding(building) {
 
   // Draw windows
   building.windows.forEach(_renderWindow);
+}
+
+// ***************************************************************************
+// Description:
+//   This function renders the wind speed indicator on the simulation canvas.
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+function _renderWindSpeed() {
+  if(windSpeed !== 0) {
+    const arrowDirection = windSpeed > 0 ? -2 : 2;
+    const windLineLengthPx = windSpeed * 3 * canvas.width / 320;
+    const windLinePositionX = (canvas.width / 2) - (windLineLengthPx / 2);
+    const windLinePositionY = canvas.height - 5;
+    const arrowHeadPositionX = windLinePositionX + windLineLengthPx;
+
+    // Arrow line
+    context.strokeStyle = WIND_COLOUR;
+    context.beginPath();
+    context.moveTo(windLinePositionX, windLinePositionY);
+    context.lineTo(arrowHeadPositionX, windLinePositionY);
+
+    // Arrow head
+    context.moveTo(arrowHeadPositionX, windLinePositionY);
+    context.lineTo(arrowHeadPositionX + arrowDirection, windLinePositionY - 2);
+    context.moveTo(arrowHeadPositionX, windLinePositionY);
+    context.lineTo(arrowHeadPositionX + arrowDirection, windLinePositionY + 2);
+
+    context.stroke();
+  }
 }
 
 // ***************************************************************************
@@ -569,7 +610,7 @@ function _createBuildings() {
       buildingWidthPx = canvas.width - topLeftX - 2
     }
 
-    // et height of building and check to see if it goes below screen
+    // Set height of building and check to see if it goes below screen
     let buildingHeightPx = Math.floor(Math.random() * randomHeightPx) + newHeight;
     if(buildingHeightPx < heightIncreasePx){
       buildingHeightPx = heightIncreasePx;
@@ -580,7 +621,7 @@ function _createBuildings() {
       buildingHeightPx = maxHeightPx + gorillaHeightAllowancePx - 5;
     }
 
-    const topLeftY = canvas.height - buildingHeightPx;
+    const topLeftY = canvas.height - buildingHeightPx - 10;
     const windows = _createWindows(topLeftX, topLeftY, buildingWidthPx, buildingHeightPx);
 
     const colour = Math.floor(Math.random()*3);
