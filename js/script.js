@@ -8,11 +8,13 @@
 // ***************************************************************************
 
 const FRAMES_PER_SECOND = 10;
+const BACKGROUND_COLOUR = "#000da3";
 let canvas, context;
 let intervalId = null;
 let gorillas = [];
 let bananas = [];
 let buildings = [];
+let sun = null;
 
 // ***************************************************************************
 // Description:
@@ -87,11 +89,13 @@ function resetSimulation() {
 
   let numberOfGorillas = document.getElementById("number_gorillas").value;
   let numberOfBananas  = document.getElementById("number_bananas").value;
+  sun = null;
   buildings = [];
   gorillas = [];
   bananas = [];
 
-  _createCityScape();
+  sun = _createSun();
+  buildings = _createBuildings();
 
   for(var i = 0; i < numberOfGorillas; ++i) {
     gorillas.push(_createGorilla());
@@ -176,6 +180,7 @@ function _updateElementPositions() {
 function _renderElements() {
 
   _renderBackground();
+  _renderSun(sun);
 
   buildings.forEach(_renderBuilding);
   gorillas.forEach(_renderGorilla);
@@ -247,9 +252,80 @@ function _createIntervalLoop() {
 // ***************************************************************************
 //
 function _renderBackground() {
-  // draw background
-  context.fillStyle = "#000da3";
+  context.fillStyle = BACKGROUND_COLOUR;
   context.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+// ***************************************************************************
+// Description:
+//   This function renders a single sun on the simulation canvas
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+function _renderSun(sun) {
+  context.strokeStyle = "#fffe55";
+  context.fillStyle = "#fffe55";
+  context.beginPath();
+  context.arc(sun.positionX, sun.positionY, 12, 0, 2 * Math.PI);
+  context.fill();
+  context.stroke();
+
+  // Draw Rays
+  context.beginPath();
+
+  context.moveTo(sun.positionX - 22 ,sun.positionY);
+  context.lineTo(sun.positionX + 22 ,sun.positionY);
+
+  context.moveTo(sun.positionX, sun.positionY - 22);
+  context.lineTo(sun.positionX, sun.positionY + 22);
+
+  context.moveTo(sun.positionX - 15, sun.positionY - 16);
+  context.lineTo(sun.positionX + 15, sun.positionY + 16);
+
+  context.moveTo(sun.positionX - 15, sun.positionY + 16);
+  context.lineTo(sun.positionX + 15, sun.positionY - 16);
+
+  context.moveTo(sun.positionX - 8, sun.positionY - 20);
+  context.lineTo(sun.positionX + 8, sun.positionY + 20);
+
+  context.moveTo(sun.positionX - 8, sun.positionY + 20);
+  context.lineTo(sun.positionX + 8, sun.positionY - 20);
+
+  context.moveTo(sun.positionX - 20, sun.positionY - 8);
+  context.lineTo(sun.positionX + 20, sun.positionY + 8);
+
+  context.moveTo(sun.positionX - 20, sun.positionY + 8);
+  context.lineTo(sun.positionX + 20, sun.positionY - 8);
+
+  context.stroke();
+
+  // Draw Mouth
+  context.strokeStyle = BACKGROUND_COLOUR;
+  context.beginPath();
+  if(sun.isSuprised) {
+    context.arc(sun.positionX, sun.positionY + 5, 3, 0, 2 * Math.PI)
+  }
+  else {
+    context.arc(sun.positionX, sun.positionY, 8, 30 * Math.PI / 180, 150 * Math.PI / 180);
+  }
+  context.stroke();
+
+  // Draw Left Eye
+  context.beginPath();
+  context.arc(sun.positionX - 4, sun.positionY - 2, 1, 0, 2 * Math.PI);
+  context.stroke();
+
+  // Draw Right Eye
+  context.beginPath();
+  context.arc(sun.positionX + 4, sun.positionY - 2, 1, 0, 2 * Math.PI);
+  context.stroke();
+
 }
 
 // ***************************************************************************
@@ -415,7 +491,7 @@ function _renderBanana(banana) {
 
 // ***************************************************************************
 // Description:
-//   This function creates an instance of a cityscape
+//   This function creates an instance of a sun
 //
 // Inputs:
 //   None
@@ -425,8 +501,27 @@ function _renderBanana(banana) {
 //   An instance of a Gorilla
 // ***************************************************************************
 //
-function _createCityScape() {
+function _createSun() {
+  const positionX = Math.floor(canvas.width / 2);
+  const positionY = 25;
+  return new Sun(positionX, positionY, true);
+}
 
+// ***************************************************************************
+// Description:
+//   This function creates the buildings in the cityscape
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+function _createBuildings() {
+
+  let buildings = [];
   const buildingColours = ["#4fa7a9", "#aaaaaa", "#9a1e14"];
   const slopes = [15,130,15,15,15,130];
   const slope = Math.floor(Math.random() * 6);
@@ -497,6 +592,7 @@ function _createCityScape() {
             windows));
     topLeftX += buildingWidthPx + buildingSpacingPx;
   }
+  return buildings;
 }
 
 // ***************************************************************************
@@ -512,7 +608,7 @@ function _createCityScape() {
 // Outputs:
 //   None
 // Returns:
-//   An instance of a Gorilla
+//   An instance of an array of Windows
 // ***************************************************************************
 //
 function _createWindows(buildingTopLeftX, buildingTopLeftY, buildingWidthPx, buildingHeightPx) {
