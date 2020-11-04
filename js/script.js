@@ -9,7 +9,6 @@
 
 const FRAMES_PER_SECOND = 10;
 const BACKGROUND_COLOUR = "#000da3";
-const WIND_COLOUR = "#c62b62";
 let canvas, context;
 let intervalId = null;
 let gorillas = [];
@@ -274,8 +273,9 @@ function _renderBackground() {
 // ***************************************************************************
 //
 function _renderSun(sun) {
-  context.strokeStyle = "#fffe55";
-  context.fillStyle = "#fffe55";
+  const sunColour = "#fffe55";
+  context.strokeStyle = sunColour;
+  context.fillStyle = sunColour;
   context.beginPath();
   context.arc(sun.positionX, sun.positionY, 12, 0, 2 * Math.PI);
   context.fill();
@@ -370,6 +370,7 @@ function _renderBuilding(building) {
 //
 function _renderWindSpeed() {
   if(windSpeed !== 0) {
+    const windColour = "#c62b62";
     const arrowDirection = windSpeed > 0 ? -2 : 2;
     const windLineLengthPx = windSpeed * 3 * canvas.width / 320;
     const windLinePositionX = (canvas.width / 2) - (windLineLengthPx / 2);
@@ -377,7 +378,7 @@ function _renderWindSpeed() {
     const arrowHeadPositionX = windLinePositionX + windLineLengthPx;
 
     // Arrow line
-    context.strokeStyle = WIND_COLOUR;
+    context.strokeStyle = windColour;
     context.beginPath();
     context.moveTo(windLinePositionX, windLinePositionY);
     context.lineTo(arrowHeadPositionX, windLinePositionY);
