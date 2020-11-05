@@ -55,24 +55,35 @@
                 </div>
                 <div class="row">
                   <div class="col">
-                    <label>Bananas</label>
-                  </div>
-                  <div class="col">
-                    <input id="number_bananas_range" type="range" class="custom-range" min="1" max="10" value="1" oninput="number_bananas.value=value"></input>
-                  </div>
-                  <div class="col">
-                    <output id="number_bananas">1</output>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <label>Gravity(m/s)</label>
+                    <label>Gravity</label>
                   </div>
                   <div class="col">
                     <input id="gravity_range" type="range" class="custom-range" min="0" max="10" step="0.1" value="9.8" oninput="gravity.value=value"></input>
                   </div>
                   <div class="col">
-                    <output id="gravity">9.8</output>
+                    <output id="gravity">9.8</output> m/s
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <label>Angle</label>
+                  </div>
+                  <div class="col">
+                    <input id="angle_range" type="range" class="custom-range" min="0" max="360" step="0.1" value="45" oninput="angle.value=value"></input>
+                  </div>
+                  <div class="col">
+                    <output id="angle">45</output>&deg;
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <label>Velocity</label>
+                  </div>
+                  <div class="col">
+                    <input id="velocity_range" type="range" class="custom-range" min="0" max="360" step="0.1" value="40" oninput="velocity.value=value"></input>
+                  </div>
+                  <div class="col">
+                    <output id="velocity">40</output> m/s
                   </div>
                 </div>
             </div>

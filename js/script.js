@@ -7,7 +7,7 @@
 //                                                                           *
 // ***************************************************************************
 
-const FRAMES_PER_SECOND = 10;
+const FRAMES_PER_SECOND = 15;
 const BACKGROUND_COLOUR = "#000da3";
 let canvas, context;
 let intervalId = null;
@@ -90,7 +90,6 @@ function resumeSimulation() {
 function resetSimulation() {
 
   let numberOfGorillas = document.getElementById("number_gorillas").value;
-  let numberOfBananas  = document.getElementById("number_bananas").value;
   sun = null;
   buildings = [];
   gorillas = [];
@@ -105,9 +104,7 @@ function resetSimulation() {
     gorillas.push(_createGorilla());
   }
 
-  for(var i = 0; i < numberOfBananas; ++i) {
-    bananas.push(_createBanana());
-  }
+  bananas.push(_createBanana());
 
   // set up simulation loop
   _clearIntervalLoop(intervalId);
@@ -130,6 +127,7 @@ function resetSimulation() {
 function _updateSimulation() {
 
   _processUserInput();
+  _moveElements();
   _updateElementPositions();
   _renderElements();
 
@@ -149,6 +147,41 @@ function _updateSimulation() {
 //
 function _processUserInput() {
   // Nothing to process right now
+}
+
+// ***************************************************************************
+// Description:
+//   This function performs element movement for a single event loop.
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+function _moveElements() {
+  bananas.forEach(_moveBanana);
+}
+
+// ***************************************************************************
+// Description:
+//   This function performs banana movement for a single event loop.
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+function _moveBanana(banana) {
+  banana.positionX += (banana.velocityMetresPerSecondX + windSpeedMetersPerSecond) / FRAMES_PER_SECOND ;
+  banana.positionY -= banana.velocityMetresPerSecondY / FRAMES_PER_SECOND; // Y-axis is opposite
+  banana.velocityMetresPerSecondY -= gravityMetresPerSecond / FRAMES_PER_SECOND;
+  banana.rotationAngleDg = (banana.rotationAngleDg - 45) % 360;
 }
 
 // ***************************************************************************
@@ -515,6 +548,7 @@ function _renderBanana(banana) {
 
   const bananaOuterRadiusPx = 5;
   const bananaInnerRadiusPx = 3;
+  const rotationAngleRad = banana.rotationAngleDg * Math.PI / 180;
 
   context.strokeStyle = banana.lineColour;
   context.fillStyle = banana.fillColour;
@@ -522,11 +556,11 @@ function _renderBanana(banana) {
 
   context.arc(banana.positionX, banana.positionY,
               bananaOuterRadiusPx,
-              0 + banana.rotationAngleDg, Math.PI + banana.rotationAngleDg,
+              rotationAngleRad, Math.PI + rotationAngleRad,
               false);
   context.arc(banana.positionX, banana.positionY,
               bananaInnerRadiusPx,
-              Math.PI + banana.rotationAngleDg, 0 + banana.rotationAngleDg,
+              Math.PI + rotationAngleRad, rotationAngleRad,
               true );
   context.closePath();
   context.fill();
@@ -548,7 +582,7 @@ function _renderBanana(banana) {
 function _createSun() {
   const positionX = Math.floor(canvas.width / 2);
   const positionY = 25;
-  return new Sun(positionX, positionY, true);
+  return new Sun(positionX, positionY, false);
 }
 
 // ***************************************************************************
@@ -723,11 +757,23 @@ function _createGorilla() {
 function _createBanana() {
 
   let positionX, positionY;
+  let velocityMetresPerSecondX, velocityMetresPerSecondY;
   let rotationAngleDg;
 
-  positionX = Math.random() * canvas.width;  // [0, canvas.width)
-  positionY = Math.random() * canvas.height; // [0, canvas.height)
-  rotationAngleDg = Math.random() * (360);   // [0,360)
+  positionX = 50; // Default position for testing
+  positionY = canvas.height / 2; // Default position for testing
+  rotationAngleDg = 0;
 
-  return new Banana(positionX, positionY, rotationAngleDg);
+  velocityMetresPerSecondX =
+      document.getElementById("velocity").value *
+      Math.cos(document.getElementById("angle").value * Math.PI / 180);
+  velocityMetresPerSecondY =
+      document.getElementById("velocity").value *
+      Math.sin(document.getElementById("angle").value * Math.PI / 180);
+
+  return new Banana(
+      positionX, positionY,
+      rotationAngleDg,
+      velocityMetresPerSecondX,
+      velocityMetresPerSecondY );
 }
