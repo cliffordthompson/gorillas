@@ -89,7 +89,7 @@ function resumeSimulation() {
 //
 function resetSimulation() {
 
-  let numberOfGorillas = document.getElementById("number_gorillas").value;
+  let numberOfGorillas = parseInt(document.getElementById("number_gorillas").value);
   sun = null;
   buildings = [];
   gorillas = [];
@@ -97,8 +97,8 @@ function resetSimulation() {
 
   sun = _createSun();
   buildings = _createBuildings();
-  windSpeedMetersPerSecond = Math.random() * 60 - 30; // [-30,30]
-  gravityMetresPerSecond = document.getElementById("gravity").value;
+  windSpeedMetersPerSecond = parseFloat(document.getElementById("wind").value);
+  gravityMetresPerSecond = parseFloat(document.getElementById("gravity").value);
 
   for(var i = 0; i < numberOfGorillas; ++i) {
     gorillas.push(_createGorilla());
@@ -759,17 +759,19 @@ function _createBanana() {
   let positionX, positionY;
   let velocityMetresPerSecondX, velocityMetresPerSecondY;
   let rotationAngleDg;
+  const velocityMetresPerSecond = parseFloat(document.getElementById("velocity").value)
+  const angleDg = parseFloat(document.getElementById("angle").value);
 
   positionX = 50; // Default position for testing
   positionY = canvas.height / 2; // Default position for testing
   rotationAngleDg = 0;
 
   velocityMetresPerSecondX =
-      document.getElementById("velocity").value *
-      Math.cos(document.getElementById("angle").value * Math.PI / 180);
+      velocityMetresPerSecond *
+      Math.cos(angleDg * Math.PI / 180);
   velocityMetresPerSecondY =
-      document.getElementById("velocity").value *
-      Math.sin(document.getElementById("angle").value * Math.PI / 180);
+      velocityMetresPerSecond *
+      Math.sin(angleDg * Math.PI / 180);
 
   return new Banana(
       positionX, positionY,
