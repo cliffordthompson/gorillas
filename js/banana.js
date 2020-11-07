@@ -34,6 +34,8 @@ function Banana (
   this.rotationAngleDg = rotationAngleDg;
   this.velocityMetresPerSecondX = velocityMetresPerSecondX;
   this.velocityMetresPerSecondY = velocityMetresPerSecondY;
+  this.outerRadiusPx = 5;
+  this.innerRadiusPx = 3;
   this.fillColour = "#ffff00";
   this.lineColour = "#ffff00";
 }

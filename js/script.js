@@ -189,10 +189,11 @@ function _detectCollisions(banana) {
     let banana = bananas[i];
     for(let j = 0; j < buildings.length; ++j) {
       let buildingModel = buildings[j].model;
-      if(banana.positionX > buildingModel.positionX &&
-         banana.positionX < buildingModel.positionX + buildingModel.widthPx &&
-         banana.positionY > buildingModel.positionY &&
-         banana.positionY < buildingModel.positionY + buildingModel.heightPx) {
+      if(banana.positionX + banana.outerRadiusPx > buildingModel.positionX &&
+         banana.positionX - banana.outerRadiusPx < buildingModel.positionX + buildingModel.widthPx &&
+         banana.positionY + banana.outerRadiusPx > buildingModel.positionY &&
+         banana.positionY - banana.outerRadiusPx < buildingModel.positionY + buildingModel.heightPx) {
+        explosions.push(new Explosion(banana.positionX, banana.positionY));
         bananas.splice(i,1);
         break;
       }
@@ -575,8 +576,6 @@ function _renderGorilla(gorilla) {
 //
 function _renderBanana(banana) {
 
-  const bananaOuterRadiusPx = 5;
-  const bananaInnerRadiusPx = 3;
   const rotationAngleRad = banana.rotationAngleDg * Math.PI / 180;
 
   context.strokeStyle = banana.lineColour;
@@ -584,11 +583,11 @@ function _renderBanana(banana) {
   context.beginPath();
 
   context.arc(banana.positionX, banana.positionY,
-              bananaOuterRadiusPx,
+              banana.outerRadiusPx,
               rotationAngleRad, Math.PI + rotationAngleRad,
               false);
   context.arc(banana.positionX, banana.positionY,
-              bananaInnerRadiusPx,
+              banana.innerRadiusPx,
               Math.PI + rotationAngleRad, rotationAngleRad,
               true );
   context.closePath();
