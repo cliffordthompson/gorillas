@@ -218,7 +218,6 @@ function _renderElements() {
 
   _renderBackground();
   _renderSun(sun);
-
   buildings.forEach(_renderBuilding);
   _renderWindSpeed();
 
@@ -382,13 +381,25 @@ function _renderSun(sun) {
 //
 function _renderBuilding(building) {
 
-  context.fillStyle = building.fillColour;
+  let buildingModel = building.model;
 
-  // Draw main Building Structure
-  context.fillRect(building.positionX, building.positionY, building.widthPx, building.heightPx );
+  if(!building.render) {
+    context.fillStyle = buildingModel.fillColour;
 
-  // Draw windows
-  building.windows.forEach(_renderWindow);
+    // Draw main Building Structure
+    context.fillRect(
+        buildingModel.positionX, buildingModel.positionY,
+        buildingModel.widthPx, buildingModel.heightPx );
+    // Draw windows
+    buildingModel.windows.forEach(_renderWindow);
+    building.render =
+        context.getImageData(
+            buildingModel.positionX,buildingModel.positionY,
+            buildingModel.widthPx, buildingModel.heightPx);
+  } else {
+    // Build has already been draw, so just use the image version
+    context.putImageData(building['render'], buildingModel.positionX, buildingModel.positionY);
+  }
 }
 
 // ***************************************************************************
@@ -663,11 +674,12 @@ function _createBuildings() {
 
     const colour = Math.floor(Math.random()*3);
     buildings.push(
-        new Building(
+        { model: new Building(
             topLeftX, topLeftY,
             buildingWidthPx, buildingHeightPx,
             buildingColours[colour],
-            windows));
+            windows)
+        });
     topLeftX += buildingWidthPx + buildingSpacingPx;
   }
   return buildings;
