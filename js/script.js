@@ -90,6 +90,7 @@ function resumeSimulation() {
 function resetSimulation() {
 
   let numberOfGorillas = parseInt(document.getElementById("number_gorillas").value);
+  let numberOfBananas = parseInt(document.getElementById("number_bananas").value);
   sun = null;
   buildings = [];
   gorillas = [];
@@ -104,7 +105,9 @@ function resetSimulation() {
     gorillas.push(_createGorilla());
   }
 
-  bananas.push(_createBanana());
+  for(var i = 0; i < numberOfBananas; ++i) {
+    bananas.push(_createBanana());
+  }
 
   // set up simulation loop
   _clearIntervalLoop(intervalId);
@@ -127,6 +130,7 @@ function resetSimulation() {
 function _updateSimulation() {
 
   _processUserInput();
+  _detectCollisions();
   _moveElements();
   _renderElements();
 
@@ -162,6 +166,36 @@ function _processUserInput() {
 //
 function _moveElements() {
   bananas.forEach(_moveBanana);
+}
+
+// ***************************************************************************
+// Description:
+//   This function performs box-based collision detection on bananas and
+//   buildings. If the banana collides with a building, the banana is removed.
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+function _detectCollisions(banana) {
+
+  for(let i = bananas.length - 1; i >= 0 ; --i) {
+    let banana = bananas[i];
+    for(let j = 0; j < buildings.length; ++j) {
+      let buildingModel = buildings[j].model;
+      if(banana.positionX > buildingModel.positionX &&
+         banana.positionX < buildingModel.positionX + buildingModel.widthPx &&
+         banana.positionY > buildingModel.positionY &&
+         banana.positionY < buildingModel.positionY + buildingModel.heightPx) {
+        bananas.splice(i,1);
+        break;
+      }
+    }
+  }
 }
 
 // ***************************************************************************
@@ -756,7 +790,7 @@ function _createBanana() {
   const angleDg = parseFloat(document.getElementById("angle").value);
 
   positionX = 50; // Default position for testing
-  positionY = canvas.height / 2; // Default position for testing
+  positionY = Math.random() * canvas.height / 2; // Default position for testing
   rotationAngleDg = 0;
 
   velocityMetresPerSecondX =
