@@ -14,6 +14,7 @@ let intervalId = null;
 let gorillas = [];
 let bananas = [];
 let buildings = [];
+let explosions = [];
 let sun = null;
 let windSpeedMetersPerSecond = null;
 let gravityMetresPerSecond = null;
@@ -95,6 +96,7 @@ function resetSimulation() {
   buildings = [];
   gorillas = [];
   bananas = [];
+  explosions = [];
 
   sun = _createSun();
   buildings = _createBuildings();
@@ -219,29 +221,6 @@ function _moveBanana(banana) {
 
 // ***************************************************************************
 // Description:
-//   This function renders all the elements for a single event loop.
-//
-// Inputs:
-//   None
-// Outputs:
-//   None
-// Returns:
-//   None
-// ***************************************************************************
-//
-function _renderElements() {
-
-  _renderBackground();
-  _renderSun(sun);
-  buildings.forEach(_renderBuilding);
-  _renderWindSpeed();
-
-  gorillas.forEach(_renderGorilla);
-  bananas.forEach(_renderBanana);
-}
-
-// ***************************************************************************
-// Description:
 //   This function can be called to end the simulation.
 //
 // Inputs:
@@ -290,6 +269,30 @@ function _clearIntervalLoop(intervalId) {
 //
 function _createIntervalLoop() {
   return setInterval(_updateSimulation, 1000 / FRAMES_PER_SECOND);
+}
+
+// ***************************************************************************
+// Description:
+//   This function renders all the elements for a single event loop.
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+function _renderElements() {
+
+  _renderBackground();
+  _renderSun(sun);
+  buildings.forEach(_renderBuilding);
+  _renderWindSpeed();
+
+  gorillas.forEach(_renderGorilla);
+  bananas.forEach(_renderBanana);
+  explosions.forEach(_renderExplosion);
 }
 
 // ***************************************************************************
@@ -589,6 +592,31 @@ function _renderBanana(banana) {
               Math.PI + rotationAngleRad, rotationAngleRad,
               true );
   context.closePath();
+  context.fill();
+  context.stroke();
+}
+
+// ***************************************************************************
+// Description:
+//   This function renders a single explosion on the simulation canvas.
+//
+// Inputs:
+//   explosion - The instance of the explosion to draw
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+function _renderExplosion(explosion) {
+
+  context.strokeStyle = explosion.fillColour;
+  context.fillStyle = explosion.fillColour;
+  context.beginPath();
+  context.arc(
+      explosion.positionX, explosion.positionY,
+      explosion.radiusPx,
+      0, 2 * Math.PI);
   context.fill();
   context.stroke();
 }
