@@ -128,7 +128,6 @@ function _updateSimulation() {
 
   _processUserInput();
   _moveElements();
-  _updateElementPositions();
   _renderElements();
 
 }
@@ -183,24 +182,6 @@ function _moveBanana(banana) {
   banana.velocityMetresPerSecondY -= gravityMetresPerSecond / FRAMES_PER_SECOND;
   banana.rotationAngleDg = (banana.rotationAngleDg - 45) % 360;
 }
-
-// ***************************************************************************
-// Description:
-//   This function updates the location of all elements for a single event
-//   loop.
-//
-// Inputs:
-//   None
-// Outputs:
-//   None
-// Returns:
-//   None
-// ***************************************************************************
-//
-function _updateElementPositions() {
-  // Nothing to update right now
-}
-
 
 // ***************************************************************************
 // Description:
