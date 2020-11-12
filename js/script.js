@@ -9,6 +9,7 @@
 
 const FRAMES_PER_SECOND = 15;
 const BACKGROUND_COLOUR = "#000da3";
+const GORILLA_HEIGHT_PX = 33;
 let canvas, context;
 let intervalId = null;
 let gorillas = [];
@@ -184,6 +185,19 @@ function _detectCollisions(banana) {
 
   for(let i = bananas.length - 1; i >= 0 ; --i) {
     let banana = bananas[i];
+    // Check Gorilla collisions
+    for(let j = 0; j < gorillas.length; ++j) {
+      let gorillaHitbox = gorillas[j].hitbox;
+      if(banana.positionX + banana.outerRadiusPx > gorillaHitbox.positionX &&
+         banana.positionX - banana.outerRadiusPx < gorillaHitbox.positionX + gorillaHitbox.widthPx &&
+         banana.positionY + banana.outerRadiusPx > gorillaHitbox.positionY &&
+         banana.positionY - banana.outerRadiusPx < gorillaHitbox.positionY + gorillaHitbox.heightPx) {
+        explosions.push(new Explosion(banana.positionX, banana.positionY));
+        bananas.splice(i,1);
+        break;
+      }
+    }
+    // Check Building collisions
     for(let j = 0; j < buildings.length; ++j) {
       let buildingModel = buildings[j].model;
       if(banana.positionX + banana.outerRadiusPx > buildingModel.positionX &&
@@ -413,8 +427,8 @@ function _renderBuilding(building) {
             buildingModel.positionX,buildingModel.positionY,
             buildingModel.widthPx, buildingModel.heightPx);
   } else {
-    // Build has already been draw, so just use the image version
-    context.putImageData(building['render'], buildingModel.positionX, buildingModel.positionY);
+    // Building has already been draw, so just use the image version
+    context.putImageData(building.render, buildingModel.positionX, buildingModel.positionY);
   }
 }
 
@@ -486,38 +500,40 @@ function _renderWindow(window) {
 //
 function _renderGorilla(gorilla) {
 
-  context.strokeStyle = gorilla.bodyColour;
-  context.fillStyle = gorilla.bodyColour;
+  const gorillaModel = gorilla.model;
+
+  context.strokeStyle = gorillaModel.bodyColour;
+  context.fillStyle = gorillaModel.bodyColour;
   context.beginPath();
 
   // Draw Head
-  context.fillRect(gorilla.positionX - 4, gorilla.positionY + 1,
+  context.fillRect(gorillaModel.positionX - 4, gorillaModel.positionY + 1,
                    7, 7);
-  context.fillRect(gorilla.positionX - 5, gorilla.positionY + 3,
+  context.fillRect(gorillaModel.positionX - 5, gorillaModel.positionY + 3,
                    9, 3);
 
   // Draw Neck
-  context.fillRect(gorilla.positionX - 3, gorilla.positionY + 8, 5, 1);
+  context.fillRect(gorillaModel.positionX - 3, gorillaModel.positionY + 8, 5, 1);
 
   // Draw Body
-  context.fillRect(gorilla.positionX - 9, gorilla.positionY + 9, 17, 8);
-  context.fillRect(gorilla.positionX - 7, gorilla.positionY + 15, 13, 6);
+  context.fillRect(gorillaModel.positionX - 9, gorillaModel.positionY + 9, 17, 8);
+  context.fillRect(gorillaModel.positionX - 7, gorillaModel.positionY + 15, 13, 6);
 
   let leftAngle1 = 215 * Math.PI / 180;
   let leftAngle2 = 147 * Math.PI / 180;
 
   // Draw Left Leg
   context.beginPath();
-  context.arc( gorilla.positionX + 0, gorilla.positionY + 27, 10, leftAngle2, leftAngle1, false );
-  context.arc( gorilla.positionX + 5, gorilla.positionY + 27, 10, leftAngle1, leftAngle2, true );
+  context.arc( gorillaModel.positionX + 0, gorillaModel.positionY + 27, 10, leftAngle2, leftAngle1, false );
+  context.arc( gorillaModel.positionX + 5, gorillaModel.positionY + 27, 10, leftAngle1, leftAngle2, true );
   context.closePath();
   context.fill();
   context.stroke();
 
   // Draw Left Arm
   context.beginPath();
-  context.arc( gorilla.positionX - 4, gorilla.positionY + 15, 10, leftAngle2, leftAngle1, false );
-  context.arc( gorilla.positionX - 0, gorilla.positionY + 15, 10, leftAngle1, leftAngle2, true );
+  context.arc( gorillaModel.positionX - 4, gorillaModel.positionY + 15, 10, leftAngle2, leftAngle1, false );
+  context.arc( gorillaModel.positionX - 0, gorillaModel.positionY + 15, 10, leftAngle1, leftAngle2, true );
   context.closePath();
   context.fill();
   context.stroke();
@@ -528,34 +544,34 @@ function _renderGorilla(gorilla) {
 
   // Draw Right Leg
   context.beginPath();
-  context.arc( gorilla.positionX - 1, gorilla.positionY + 27, 10, rightAngle1, rightAngle2, true );
-  context.arc( gorilla.positionX - 6, gorilla.positionY + 27, 10, rightAngle2, rightAngle1, false );
+  context.arc( gorillaModel.positionX - 1, gorillaModel.positionY + 27, 10, rightAngle1, rightAngle2, true );
+  context.arc( gorillaModel.positionX - 6, gorillaModel.positionY + 27, 10, rightAngle2, rightAngle1, false );
   context.closePath();
   context.fill();
   context.stroke();
 
   // Draw Right Arm
   context.beginPath();
-  context.arc( gorilla.positionX + 3, gorilla.positionY + 15, 10, rightAngle1, rightAngle2, true );
-  context.arc( gorilla.positionX - 1, gorilla.positionY + 15, 10, rightAngle2, rightAngle1,  false );
+  context.arc( gorillaModel.positionX + 3, gorillaModel.positionY + 15, 10, rightAngle1, rightAngle2, true );
+  context.arc( gorillaModel.positionX - 1, gorillaModel.positionY + 15, 10, rightAngle2, rightAngle1,  false );
   context.closePath();
   context.fill();
   context.stroke();
 
   // Draw Chest
-  context.strokeStyle = gorilla.bodyLineColour;
+  context.strokeStyle = gorillaModel.bodyLineColour;
   context.beginPath();
-  context.arc( gorilla.positionX - 5, gorilla.positionY + 11, 4.9, 0, 3 * Math.PI / 5, false );
+  context.arc( gorillaModel.positionX - 5, gorillaModel.positionY + 11, 4.9, 0, 3 * Math.PI / 5, false );
   context.stroke();
   context.beginPath();
-  context.arc( gorilla.positionX + 4, gorilla.positionY + 11, 4.9, 3 * Math.PI / 7, 4 * Math.PI / 4, false );
+  context.arc( gorillaModel.positionX + 4, gorillaModel.positionY + 11, 4.9, 3 * Math.PI / 7, 4 * Math.PI / 4, false );
   context.stroke();
 
   // Draw Eyes/Brow
-  context.fillStyle = gorilla.bodyLineColour;
-  context.fillRect(gorilla.positionX - 3, gorilla.positionY + 4, 2, 1);
-  context.fillRect(gorilla.positionX, gorilla.positionY + 4, 2, 1);
-  context.fillRect(gorilla.positionX - 3, gorilla.positionY + 2, 5, 1);
+  context.fillStyle = gorillaModel.bodyLineColour;
+  context.fillRect(gorillaModel.positionX - 3, gorillaModel.positionY + 4, 2, 1);
+  context.fillRect(gorillaModel.positionX, gorillaModel.positionY + 4, 2, 1);
+  context.fillRect(gorillaModel.positionX - 3, gorillaModel.positionY + 2, 5, 1);
   context.stroke();
 }
 
@@ -786,9 +802,18 @@ function _createGorillas(buildings) {
         Math.floor(Math.random() * 2) + 1 :
         buildings.length - (Math.floor(Math.random() * 2 + 2));
     let positionX = buildings[buildingIndexOffset].model.positionX + buildings[buildingIndexOffset].model.widthPx/2;
-    let positionY = buildings[buildingIndexOffset].model.positionY - 33;
-    gorillas.push(new Gorilla(
-        positionX, positionY, false, false));
+    let positionY = buildings[buildingIndexOffset].model.positionY - GORILLA_HEIGHT_PX;
+    gorillas.push(
+        {model: new Gorilla(
+            positionX, positionY, false, false),
+         hitbox:   {
+           positionX : positionX - 14,
+           positionY : positionY + 1,
+           widthPx: 28,
+           heightPx: GORILLA_HEIGHT_PX - 1
+         }
+        }
+    );
   }
 }
 
