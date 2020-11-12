@@ -27,4 +27,6 @@ function Sun (
   this.positionX = positionX;
   this.positionY = positionY;
   this.isSuprised = isSuprised;
+  this.fillColour = "#fffe55";
+  this.lineColour = "#fffe55";
 }

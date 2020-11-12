@@ -185,6 +185,13 @@ function _detectCollisions(banana) {
 
   for(let i = bananas.length - 1; i >= 0 ; --i) {
     let banana = bananas[i];
+    // Check Sun collisions
+      if(banana.positionX + banana.outerRadiusPx > sun.hitbox.positionX &&
+         banana.positionX - banana.outerRadiusPx < sun.hitbox.positionX + sun.hitbox.widthPx &&
+         banana.positionY + banana.outerRadiusPx > sun.hitbox.positionY &&
+         banana.positionY - banana.outerRadiusPx < sun.hitbox.positionY + sun.hitbox.heightPx) {
+        sun.model.isSuprised = true;
+      }
     // Check Gorilla collisions
     for(let j = 0; j < gorillas.length; ++j) {
       let gorillaHitbox = gorillas[j].hitbox;
@@ -342,62 +349,62 @@ function _renderBackground() {
 // ***************************************************************************
 //
 function _renderSun(sun) {
-  const sunColour = "#fffe55";
-  context.strokeStyle = sunColour;
-  context.fillStyle = sunColour;
+  const sunModel = sun.model;
+  context.strokeStyle = sunModel.lineColour;
+  context.fillStyle = sunModel.fillColour;
   context.beginPath();
-  context.arc(sun.positionX, sun.positionY, 12, 0, 2 * Math.PI);
+  context.arc(sunModel.positionX, sunModel.positionY, 12, 0, 2 * Math.PI);
   context.fill();
   context.stroke();
 
   // Draw Rays
   context.beginPath();
 
-  context.moveTo(sun.positionX - 22 ,sun.positionY);
-  context.lineTo(sun.positionX + 22 ,sun.positionY);
+  context.moveTo(sunModel.positionX - 22 ,sunModel.positionY);
+  context.lineTo(sunModel.positionX + 22 ,sunModel.positionY);
 
-  context.moveTo(sun.positionX, sun.positionY - 22);
-  context.lineTo(sun.positionX, sun.positionY + 22);
+  context.moveTo(sunModel.positionX, sunModel.positionY - 22);
+  context.lineTo(sunModel.positionX, sunModel.positionY + 22);
 
-  context.moveTo(sun.positionX - 15, sun.positionY - 16);
-  context.lineTo(sun.positionX + 15, sun.positionY + 16);
+  context.moveTo(sunModel.positionX - 15, sunModel.positionY - 16);
+  context.lineTo(sunModel.positionX + 15, sunModel.positionY + 16);
 
-  context.moveTo(sun.positionX - 15, sun.positionY + 16);
-  context.lineTo(sun.positionX + 15, sun.positionY - 16);
+  context.moveTo(sunModel.positionX - 15, sunModel.positionY + 16);
+  context.lineTo(sunModel.positionX + 15, sunModel.positionY - 16);
 
-  context.moveTo(sun.positionX - 8, sun.positionY - 20);
-  context.lineTo(sun.positionX + 8, sun.positionY + 20);
+  context.moveTo(sunModel.positionX - 8, sunModel.positionY - 20);
+  context.lineTo(sunModel.positionX + 8, sunModel.positionY + 20);
 
-  context.moveTo(sun.positionX - 8, sun.positionY + 20);
-  context.lineTo(sun.positionX + 8, sun.positionY - 20);
+  context.moveTo(sunModel.positionX - 8, sunModel.positionY + 20);
+  context.lineTo(sunModel.positionX + 8, sunModel.positionY - 20);
 
-  context.moveTo(sun.positionX - 20, sun.positionY - 8);
-  context.lineTo(sun.positionX + 20, sun.positionY + 8);
+  context.moveTo(sunModel.positionX - 20, sunModel.positionY - 8);
+  context.lineTo(sunModel.positionX + 20, sunModel.positionY + 8);
 
-  context.moveTo(sun.positionX - 20, sun.positionY + 8);
-  context.lineTo(sun.positionX + 20, sun.positionY - 8);
+  context.moveTo(sunModel.positionX - 20, sunModel.positionY + 8);
+  context.lineTo(sunModel.positionX + 20, sunModel.positionY - 8);
 
   context.stroke();
 
   // Draw Mouth
   context.strokeStyle = BACKGROUND_COLOUR;
   context.beginPath();
-  if(sun.isSuprised) {
-    context.arc(sun.positionX, sun.positionY + 5, 3, 0, 2 * Math.PI)
+  if(sunModel.isSuprised) {
+    context.arc(sunModel.positionX, sunModel.positionY + 5, 3, 0, 2 * Math.PI)
   }
   else {
-    context.arc(sun.positionX, sun.positionY, 8, 30 * Math.PI / 180, 150 * Math.PI / 180);
+    context.arc(sunModel.positionX, sunModel.positionY, 8, 30 * Math.PI / 180, 150 * Math.PI / 180);
   }
   context.stroke();
 
   // Draw Left Eye
   context.beginPath();
-  context.arc(sun.positionX - 4, sun.positionY - 2, 1, 0, 2 * Math.PI);
+  context.arc(sunModel.positionX - 4, sunModel.positionY - 2, 1, 0, 2 * Math.PI);
   context.stroke();
 
   // Draw Right Eye
   context.beginPath();
-  context.arc(sun.positionX + 4, sun.positionY - 2, 1, 0, 2 * Math.PI);
+  context.arc(sunModel.positionX + 4, sunModel.positionY - 2, 1, 0, 2 * Math.PI);
   context.stroke();
 
 }
@@ -654,7 +661,14 @@ function _renderExplosion(explosion) {
 function _createSun() {
   const positionX = Math.floor(canvas.width / 2);
   const positionY = 25;
-  return new Sun(positionX, positionY, false);
+  return {
+    model: new Sun(positionX, positionY, false),
+    hitbox: {
+      positionX: positionX - 22,
+      positionY: positionY - 20,
+      widthPx: 44,
+      heightPx: 40
+    }};
 }
 
 // ***************************************************************************
