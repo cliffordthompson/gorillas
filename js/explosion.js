@@ -21,10 +21,11 @@
 // ***************************************************************************
 //
 function Explosion (
-    positionX, positionY) {
+    positionX, positionY, radiusXPx, radiusYPx) {
 
   this.positionX = positionX;
   this.positionY = positionY;
-  this.radiusPx = 10;
+  this.radiusXPx = radiusXPx;
+  this.radiusYPx = radiusYPx;
   this.fillColour = "#ff2222";
 }

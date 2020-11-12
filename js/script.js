@@ -192,7 +192,10 @@ function _detectCollisions(banana) {
          banana.positionX - banana.outerRadiusPx < gorillaHitbox.positionX + gorillaHitbox.widthPx &&
          banana.positionY + banana.outerRadiusPx > gorillaHitbox.positionY &&
          banana.positionY - banana.outerRadiusPx < gorillaHitbox.positionY + gorillaHitbox.heightPx) {
-        explosions.push(new Explosion(banana.positionX, banana.positionY));
+        explosions.push(new Explosion(
+            gorillaHitbox.positionX + gorillaHitbox.widthPx/2,
+            gorillaHitbox.positionY + gorillaHitbox.heightPx/2,
+            50, 20));
         bananas.splice(i,1);
         break;
       }
@@ -204,7 +207,9 @@ function _detectCollisions(banana) {
          banana.positionX - banana.outerRadiusPx < buildingHitBox.positionX + buildingHitBox.widthPx &&
          banana.positionY + banana.outerRadiusPx > buildingHitBox.positionY &&
          banana.positionY - banana.outerRadiusPx < buildingHitBox.positionY + buildingHitBox.heightPx) {
-        explosions.push(new Explosion(banana.positionX, banana.positionY));
+        explosions.push(new Explosion(
+            banana.positionX, banana.positionY,
+            10, 10));
         bananas.splice(i,1);
         break;
       }
@@ -625,9 +630,10 @@ function _renderExplosion(explosion) {
   context.strokeStyle = explosion.fillColour;
   context.fillStyle = explosion.fillColour;
   context.beginPath();
-  context.arc(
+  context.ellipse(
       explosion.positionX, explosion.positionY,
-      explosion.radiusPx,
+      explosion.radiusXPx, explosion.radiusYPx,
+      0,
       0, 2 * Math.PI);
   context.fill();
   context.stroke();
