@@ -199,11 +199,11 @@ function _detectCollisions(banana) {
     }
     // Check Building collisions
     for(let j = 0; j < buildings.length; ++j) {
-      let buildingModel = buildings[j].model;
-      if(banana.positionX + banana.outerRadiusPx > buildingModel.positionX &&
-         banana.positionX - banana.outerRadiusPx < buildingModel.positionX + buildingModel.widthPx &&
-         banana.positionY + banana.outerRadiusPx > buildingModel.positionY &&
-         banana.positionY - banana.outerRadiusPx < buildingModel.positionY + buildingModel.heightPx) {
+      let buildingHitBox = buildings[j].hitbox;
+      if(banana.positionX + banana.outerRadiusPx > buildingHitBox.positionX &&
+         banana.positionX - banana.outerRadiusPx < buildingHitBox.positionX + buildingHitBox.widthPx &&
+         banana.positionY + banana.outerRadiusPx > buildingHitBox.positionY &&
+         banana.positionY - banana.outerRadiusPx < buildingHitBox.positionY + buildingHitBox.heightPx) {
         explosions.push(new Explosion(banana.positionX, banana.positionY));
         bananas.splice(i,1);
         break;
@@ -733,7 +733,13 @@ function _createBuildings() {
             topLeftX, topLeftY,
             buildingWidthPx, buildingHeightPx,
             buildingColours[colour],
-            windows)
+            windows),
+          hitbox: {
+            positionX: topLeftX,
+            positionY: topLeftY,
+            widthPx: buildingWidthPx,
+            heightPx: buildingHeightPx
+          }
         });
     topLeftX += buildingWidthPx + buildingSpacingPx;
   }
@@ -806,7 +812,7 @@ function _createGorillas(buildings) {
     gorillas.push(
         {model: new Gorilla(
             positionX, positionY, false, false),
-         hitbox:   {
+         hitbox: {
            positionX : positionX - 14,
            positionY : positionY + 1,
            widthPx: 28,
