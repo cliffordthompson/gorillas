@@ -90,7 +90,6 @@ function resumeSimulation() {
 //
 function resetSimulation() {
 
-  let numberOfGorillas = parseInt(document.getElementById("number_gorillas").value);
   let numberOfBananas = parseInt(document.getElementById("number_bananas").value);
   sun = null;
   buildings = [];
@@ -103,9 +102,7 @@ function resetSimulation() {
   windSpeedMetersPerSecond = parseFloat(document.getElementById("wind").value);
   gravityMetresPerSecond = parseFloat(document.getElementById("gravity").value);
 
-  for(var i = 0; i < numberOfGorillas; ++i) {
-    gorillas.push(_createGorilla());
-  }
+  _createGorillas(buildings);
 
   for(var i = 0; i < numberOfBananas; ++i) {
     bananas.push(_createBanana());
@@ -771,30 +768,29 @@ function _createWindows(buildingTopLeftX, buildingTopLeftY, buildingWidthPx, bui
 
 // ***************************************************************************
 // Description:
-//   This function creates an instance of a gorilla.
+//   This function creates the gorillas.
 //
 // Inputs:
-//   None
+//   building - An array of buildings to create the gorillas upon
 // Outputs:
 //   None
 // Returns:
-//   An instance of a Gorilla
+//   None
 // ***************************************************************************
 //
-function _createGorilla() {
+function _createGorillas(buildings) {
 
-  let positionX, positionY;
-  let leftArmUp = false;
-  let rightArmUp = false;
-
-  positionX = Math.random() * canvas.width;
-  positionY = Math.random() * canvas.height;
-
-  return new Gorilla(
-    positionX, positionY,
-    leftArmUp, rightArmUp);
+  for(var gorillaIndex = 0; gorillaIndex < 2; ++gorillaIndex) {
+    let buildingIndexOffset =
+        gorillaIndex === 1 ?
+        Math.floor(Math.random() * 2) + 1 :
+        buildings.length - (Math.floor(Math.random() * 2 + 2));
+    let positionX = buildings[buildingIndexOffset].model.positionX + buildings[buildingIndexOffset].model.widthPx/2;
+    let positionY = buildings[buildingIndexOffset].model.positionY - 33;
+    gorillas.push(new Gorilla(
+        positionX, positionY, false, false));
+  }
 }
-
 
 // ***************************************************************************
 // Description:
