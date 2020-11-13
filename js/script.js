@@ -388,9 +388,11 @@ function _renderSun(sun) {
 
   // Draw Mouth
   context.strokeStyle = BACKGROUND_COLOUR;
+  context.fillStyle = BACKGROUND_COLOUR;
   context.beginPath();
   if(sunModel.isSuprised) {
-    context.arc(sunModel.positionX, sunModel.positionY + 5, 3, 0, 2 * Math.PI)
+    context.arc(sunModel.positionX, sunModel.positionY + 5, 3, 0, 2 * Math.PI);
+    context.fill();
   }
   else {
     context.arc(sunModel.positionX, sunModel.positionY, 8, 30 * Math.PI / 180, 150 * Math.PI / 180);
