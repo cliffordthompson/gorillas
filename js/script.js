@@ -19,6 +19,7 @@ let explosions = [];
 let sun = null;
 let windSpeedMetersPerSecond = null;
 let gravityMetresPerSecond = null;
+let isBananaThrown = [false, false];
 
 // ***************************************************************************
 // Description:
@@ -97,6 +98,7 @@ function resetSimulation() {
   gorillas = [];
   bananas = [];
   explosions = [];
+  isBananaThrown = [false, false];
 
   sun = _createSun();
   buildings = _createBuildings();
@@ -105,13 +107,13 @@ function resetSimulation() {
 
   _createGorillas(buildings);
 
-  for(var i = 0; i < numberOfBananas; ++i) {
-    bananas.push(_createBanana());
-  }
-
   // set up simulation loop
   _clearIntervalLoop(intervalId);
   intervalId = _createIntervalLoop();
+}
+
+function throwBananaForGorilla(gorillaIndex) {
+  isBananaThrown[gorillaIndex] = true;
 }
 
 // ***************************************************************************
@@ -149,6 +151,31 @@ function _updateSimulation() {
 // ***************************************************************************
 //
 function _processUserInput() {
+
+  let positionX, positionY;
+  const rotationAngleDg = 0;
+  const velocityMetresPerSecond = parseFloat(document.getElementById("velocity").value);
+  const angleDg = parseFloat(document.getElementById("angle").value);
+
+  const velocityMetresPerSecondY =
+      velocityMetresPerSecond *
+      Math.sin(angleDg * Math.PI / 180);
+
+  for(var i = 0; i < 2; ++i) {
+    if(isBananaThrown[i] === true) {
+      const velocityMetresPerSecondX =
+            velocityMetresPerSecond *
+            Math.cos((angleDg - (i == 1? 180: 0) ) * Math.PI / 180);
+      bananas.push(
+          new Banana(
+              gorillas[i].model.positionX,
+              gorillas[i].model.positionY - 5,
+              rotationAngleDg,
+              velocityMetresPerSecondX,
+              velocityMetresPerSecondY));
+      isBananaThrown[i] = false;
+    }
+  }
   // Nothing to process right now
 }
 
@@ -827,8 +854,8 @@ function _createGorillas(buildings) {
   for(var gorillaIndex = 0; gorillaIndex < 2; ++gorillaIndex) {
     let buildingIndexOffset =
         gorillaIndex === 1 ?
-        Math.floor(Math.random() * 2) + 1 :
-        buildings.length - (Math.floor(Math.random() * 2 + 2));
+        buildings.length - (Math.floor(Math.random() * 2 + 2)) :
+        Math.floor(Math.random() * 2) + 1;
     let positionX = buildings[buildingIndexOffset].model.positionX + buildings[buildingIndexOffset].model.widthPx/2;
     let positionY = buildings[buildingIndexOffset].model.positionY - GORILLA_HEIGHT_PX;
     gorillas.push(
@@ -845,40 +872,3 @@ function _createGorillas(buildings) {
   }
 }
 
-// ***************************************************************************
-// Description:
-//   This function creates an instance of a banana.
-//
-// Inputs:
-//   None
-// Outputs:
-//   None
-// Returns:
-//   An instance of a Banana
-// ***************************************************************************
-//
-function _createBanana() {
-
-  let positionX, positionY;
-  let velocityMetresPerSecondX, velocityMetresPerSecondY;
-  let rotationAngleDg;
-  const velocityMetresPerSecond = parseFloat(document.getElementById("velocity").value)
-  const angleDg = parseFloat(document.getElementById("angle").value);
-
-  positionX = 50; // Default position for testing
-  positionY = Math.random() * canvas.height / 2; // Default position for testing
-  rotationAngleDg = 0;
-
-  velocityMetresPerSecondX =
-      velocityMetresPerSecond *
-      Math.cos(angleDg * Math.PI / 180);
-  velocityMetresPerSecondY =
-      velocityMetresPerSecond *
-      Math.sin(angleDg * Math.PI / 180);
-
-  return new Banana(
-      positionX, positionY,
-      rotationAngleDg,
-      velocityMetresPerSecondX,
-      velocityMetresPerSecondY );
-}
