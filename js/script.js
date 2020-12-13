@@ -134,7 +134,7 @@ function _updateSimulation() {
   _processUserInput();
   _detectCollisions();
   _moveElements();
-  _renderElements();
+  window.requestAnimationFrame(_renderElements);
 
 }
 
